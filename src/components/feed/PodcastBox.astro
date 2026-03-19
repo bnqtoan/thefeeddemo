@@ -1,0 +1,165 @@
+---
+/**
+ * PodcastBox — Compact podcast playlist box for homepage/feed.
+ * Same style as FeedCardAudioPlaylist with cover image header.
+ */
+import type { AudioPlaylistPost } from "../../lib/types";
+
+interface Props {
+    playlist: AudioPlaylistPost;
+    limit?: number;
+}
+
+const { playlist, limit = 5 } = Astro.props;
+const displayTracks = playlist.tracks.slice(0, limit);
+
+function formatDuration(seconds: number): string {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    if (h > 0) return `${h}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+    return `${m}:${s.toString().padStart(2, "0")}`;
+}
+
+const totalDuration = playlist.tracks.reduce((sum, t) => sum + t.duration, 0);
+---
+
+<section class="podcast-box mb-8">
+    <div
+        class="group rounded-xl border border-border bg-card overflow-hidden transition-shadow hover:shadow-sm"
+        data-podcast-box={playlist.slug}
+    >
+        <!-- Header with cover image -->
+        <div class="flex gap-4 p-4">
+            {
+                playlist.coverImage ? (
+                    <div class="w-16 h-16 rounded-lg overflow-hidden shrink-0">
+                        <img src={playlist.coverImage} alt={playlist.title} class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                ) : (
+                    <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-accent-soft to-accent-mid flex items-center justify-center shrink-0">
+                        <svg class="w-7 h-7 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" />
+                        </svg>
+                    </div>
+                )
+            }
+            <div class="flex-1 min-w-0">
+                <a href={`/${playlist.slug}`} class="block hover:text-accent transition-colors">
+                    <h3 class="font-heading font-semibold text-base">{playlist.title}</h3>
+                </a>
+                {playlist.subtitle && <p class="text-sm text-soft mt-0.5 line-clamp-1">{playlist.subtitle}</p>}
+                <div class="flex gap-3 mt-2 text-xs text-faint">
+                    <span>{playlist.tracks.length} tracks</span>
+                    <span>·</span>
+                    <span>{formatDuration(totalDuration)}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Track list -->
+        <div class="border-t border-border">
+            {displayTracks.map((track, i) => (
+                <div class="podcast-track" data-track-index={i} data-track-url={track.audioUrl} data-track-title={track.title} data-playlist-slug={playlist.slug}>
+                    <div class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-ink/[0.03] cursor-pointer transition-colors track-row">
+                        <span class="track-num text-faint text-xs w-5 text-center shrink-0">
+                            <span class="num-text">{i + 1}</span>
+                            <svg class="play-indicator hidden w-3.5 h-3.5 text-accent" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                            <svg class="pause-indicator hidden w-3.5 h-3.5 text-accent" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+                        </span>
+                        <span class="flex-1 truncate track-title">{track.title}</span>
+                        <span class="text-xs text-faint">{formatDuration(track.duration)}</span>
+                    </div>
+                </div>
+            ))}
+            {playlist.tracks.length > limit && (
+                <a href={`/${playlist.slug}`} class="block px-4 py-2.5 text-sm text-soft hover:text-accent transition-colors text-center border-t border-border/50">
+                    Xem tất cả {playlist.tracks.length} tập →
+                </a>
+            )}
+        </div>
+    </div>
+</section>
+
+<style>
+  .podcast-track .play-indicator,
+  .podcast-track .pause-indicator { display: none; }
+
+  .podcast-track:not(.active) .track-row:hover .num-text { display: none; }
+  .podcast-track:not(.active) .track-row:hover .play-indicator { display: block !important; }
+
+  .podcast-track.active .num-text { display: none; }
+  .podcast-track.active .track-title { color: var(--color-accent); font-weight: 500; }
+  .podcast-track.active:not(.playing) .play-indicator { display: block !important; }
+
+  .podcast-track.playing .play-indicator { display: none !important; }
+  .podcast-track.playing .pause-indicator { display: block !important; }
+</style>
+
+<script>
+    document.addEventListener("astro:page-load", () => {
+        // Sync play/pause state with global player
+        window.addEventListener('global-player-state', ((e: CustomEvent) => {
+            const { playing, src } = e.detail;
+            document.querySelectorAll('.podcast-track').forEach(trackEl => {
+                const el = trackEl as HTMLElement;
+                const trackUrl = el.dataset.trackUrl!;
+                const isThisTrack = src && src.includes(trackUrl);
+                if (isThisTrack && playing) {
+                    el.classList.add('active', 'playing');
+                } else if (isThisTrack && !playing) {
+                    el.classList.add('active');
+                    el.classList.remove('playing');
+                } else {
+                    el.classList.remove('active', 'playing');
+                }
+            });
+        }) as EventListener);
+
+        document.querySelectorAll('.podcast-track').forEach(trackEl => {
+            const row = trackEl.querySelector('.track-row') as HTMLElement;
+            const el = trackEl as HTMLElement;
+            const url = el.dataset.trackUrl!;
+            const title = el.dataset.trackTitle!;
+            const index = parseInt(el.dataset.trackIndex!);
+            const playlistSlug = el.dataset.playlistSlug!;
+
+            row.addEventListener('click', () => {
+                const globalAudioEl = (window as any).globalAudioEl as HTMLAudioElement;
+                const globalPlay = (window as any).globalPlayerPlay;
+
+                // If this track is already playing, toggle
+                if (globalAudioEl && globalAudioEl.src.includes(url)) {
+                    if (globalAudioEl.paused) globalAudioEl.play().catch(() => {});
+                    else globalAudioEl.pause();
+                    return;
+                }
+
+                // Reset all tracks
+                document.querySelectorAll('.podcast-track').forEach(t => {
+                    (t as HTMLElement).classList.remove('active', 'playing');
+                });
+
+                // Activate this track
+                el.classList.add('active');
+
+                // Build playlist from all tracks in the box
+                const podcastBox = el.closest('[data-podcast-box]');
+                const allTracks = podcastBox ? Array.from(podcastBox.querySelectorAll('.podcast-track')) as HTMLElement[] : [];
+                const playlist = allTracks.map(t => ({
+                    url: t.dataset.trackUrl!,
+                    title: t.dataset.trackTitle!,
+                    subtitle: '',
+                    coverImage: '',
+                    slug: `${t.dataset.playlistSlug}-${t.dataset.trackIndex}`,
+                }));
+
+                // Play via global player
+                if (globalPlay) {
+                    const playlistTitle = podcastBox?.querySelector('h3')?.textContent || 'Podcast';
+                    globalPlay(url, `${playlistTitle} — ${title}`, '', '', `${playlistSlug}-${index}`, playlist);
+                }
+            });
+        });
+    });
+</script>

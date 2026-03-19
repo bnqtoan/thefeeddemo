@@ -1,0 +1,33 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { t } from "../../lib/i18n";
+---
+
+<BaseLayout
+    title="About"
+    description="About this site"
+>
+    <section class="pt-14 pb-10 md:pt-20 md:pb-14">
+        <h1 class="text-3xl font-semibold tracking-tight mb-4">About</h1>
+        <div class="prose-content text-soft leading-relaxed space-y-4">
+            <p>
+                Welcome to <strong>{t("site.name")}</strong> — a content platform
+                powered by Astro 5 and Cloudflare Pages with an automated
+                content pipeline via Telegram.
+            </p>
+            <p>
+                This site is built with <a href="https://github.com/user/thefeed" class="text-accent hover:underline">The Feed</a>,
+                an open-source template for content creators who want to automate
+                their publishing workflow.
+            </p>
+            <h2 class="text-xl font-semibold text-ink mt-8 mb-3">Features</h2>
+            <ul class="list-disc pl-5 space-y-2">
+                <li>Multi-format posts: articles, videos, audio, galleries, quotes</li>
+                <li>Stream: AI-powered link recaps</li>
+                <li>Telegram bot for content management</li>
+                <li>Media CDN via Cloudflare R2</li>
+                <li>SEO optimized with dynamic OG images</li>
+            </ul>
+        </div>
+    </section>
+</BaseLayout>

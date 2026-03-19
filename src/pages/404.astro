@@ -1,0 +1,550 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="404 - Lost in Space">
+  <div class="lost-in-space">
+    <!-- Stars background -->
+    <div class="stars">
+      {Array.from({ length: 50 }).map((_, i) => (
+        <div
+          class="star"
+          style={`--delay: ${Math.random() * 3}s; --duration: ${2 + Math.random() * 2}s; --x: ${Math.random() * 100}%; --y: ${Math.random() * 100}%;`}
+        />
+      ))}
+    </div>
+
+    <!-- Flying UFOs -->
+    <div class="ufos">
+      <div class="ufo ufo-1">
+        <svg viewBox="0 0 80 40" fill="none">
+          <ellipse cx="40" cy="28" rx="35" ry="10" fill="#4B5563"/>
+          <ellipse cx="40" cy="25" rx="25" ry="15" fill="#6B7280"/>
+          <ellipse cx="40" cy="20" rx="15" ry="10" fill="#9CA3AF"/>
+          <circle cx="25" cy="28" r="3" fill="#60A5FA" class="ufo-light"/>
+          <circle cx="40" cy="30" r="3" fill="#60A5FA" class="ufo-light"/>
+          <circle cx="55" cy="28" r="3" fill="#60A5FA" class="ufo-light"/>
+        </svg>
+      </div>
+      <div class="ufo ufo-2">
+        <svg viewBox="0 0 60 30" fill="none">
+          <ellipse cx="30" cy="22" rx="26" ry="7" fill="#4B5563"/>
+          <ellipse cx="30" cy="18" rx="18" ry="12" fill="#6B7280"/>
+          <ellipse cx="30" cy="14" rx="10" ry="7" fill="#9CA3AF"/>
+          <circle cx="18" cy="22" r="2" fill="#34D399" class="ufo-light"/>
+          <circle cx="30" cy="24" r="2" fill="#34D399" class="ufo-light"/>
+          <circle cx="42" cy="22" r="2" fill="#34D399" class="ufo-light"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Flying monsters -->
+    <div class="monsters">
+      <div class="monster monster-1">
+        <svg viewBox="0 0 60 60" fill="none">
+          <!-- Body -->
+          <ellipse cx="30" cy="35" rx="20" ry="18" fill="#8B5CF6"/>
+          <!-- Eyes -->
+          <circle cx="22" cy="30" r="8" fill="white"/>
+          <circle cx="38" cy="30" r="8" fill="white"/>
+          <circle cx="24" cy="30" r="4" fill="#1F2937"/>
+          <circle cx="40" cy="30" r="4" fill="#1F2937"/>
+          <!-- Tentacles -->
+          <path d="M15 48 Q10 55 15 58" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+          <path d="M25 50 Q22 58 27 60" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+          <path d="M35 50 Q38 58 33 60" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+          <path d="M45 48 Q50 55 45 58" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+          <!-- Antenna -->
+          <line x1="22" y1="18" x2="22" y2="8" stroke="#8B5CF6" stroke-width="3"/>
+          <circle cx="22" cy="6" r="4" fill="#F472B6"/>
+          <line x1="38" y1="18" x2="38" y2="8" stroke="#8B5CF6" stroke-width="3"/>
+          <circle cx="38" cy="6" r="4" fill="#F472B6"/>
+        </svg>
+      </div>
+      <div class="monster monster-2">
+        <svg viewBox="0 0 50 50" fill="none">
+          <!-- Body -->
+          <circle cx="25" cy="28" r="18" fill="#10B981"/>
+          <!-- Single big eye -->
+          <circle cx="25" cy="25" r="10" fill="white"/>
+          <circle cx="25" cy="25" r="5" fill="#1F2937"/>
+          <circle cx="27" cy="23" r="2" fill="white"/>
+          <!-- Wings -->
+          <ellipse cx="8" cy="28" rx="8" ry="12" fill="#34D399" opacity="0.8"/>
+          <ellipse cx="42" cy="28" rx="8" ry="12" fill="#34D399" opacity="0.8"/>
+          <!-- Smile -->
+          <path d="M18 35 Q25 42 32 35" stroke="#065F46" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="monster monster-3">
+        <svg viewBox="0 0 45 55" fill="none">
+          <!-- Body (ghost shape) -->
+          <path d="M22.5 5 C8 5 5 20 5 30 L5 50 L12 45 L22.5 50 L33 45 L40 50 L40 30 C40 20 37 5 22.5 5Z" fill="#F59E0B"/>
+          <!-- Eyes -->
+          <circle cx="15" cy="25" r="5" fill="white"/>
+          <circle cx="30" cy="25" r="5" fill="white"/>
+          <circle cx="16" cy="26" r="2.5" fill="#1F2937"/>
+          <circle cx="31" cy="26" r="2.5" fill="#1F2937"/>
+          <!-- Mouth -->
+          <ellipse cx="22.5" cy="36" rx="4" ry="3" fill="#92400E"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Floating astronaut -->
+    <div class="astronaut">
+      <svg viewBox="0 0 100 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Helmet -->
+        <ellipse cx="50" cy="35" rx="28" ry="30" fill="#E8E8E8" stroke="#BDBDBD" stroke-width="2"/>
+        <ellipse cx="50" cy="35" rx="20" ry="22" fill="#1a1a2e"/>
+        <ellipse cx="50" cy="33" rx="16" ry="18" fill="#16213e" opacity="0.8"/>
+        <!-- Reflection -->
+        <ellipse cx="43" cy="28" rx="6" ry="8" fill="white" opacity="0.3"/>
+        <!-- Body -->
+        <rect x="28" y="60" width="44" height="50" rx="8" fill="#E8E8E8" stroke="#BDBDBD" stroke-width="2"/>
+        <!-- Backpack -->
+        <rect x="22" y="65" width="8" height="35" rx="3" fill="#9E9E9E"/>
+        <rect x="70" y="65" width="8" height="35" rx="3" fill="#9E9E9E"/>
+        <!-- Arms -->
+        <rect x="10" y="68" width="20" height="12" rx="6" fill="#E8E8E8" stroke="#BDBDBD" stroke-width="2"/>
+        <rect x="70" y="68" width="20" height="12" rx="6" fill="#E8E8E8" stroke="#BDBDBD" stroke-width="2"/>
+        <!-- Legs -->
+        <rect x="32" y="105" width="14" height="30" rx="5" fill="#E8E8E8" stroke="#BDBDBD" stroke-width="2"/>
+        <rect x="54" y="105" width="14" height="30" rx="5" fill="#E8E8E8" stroke="#BDBDBD" stroke-width="2"/>
+        <!-- Control panel -->
+        <rect x="38" y="75" width="24" height="16" rx="2" fill="#424242"/>
+        <circle cx="44" cy="83" r="3" fill="#4CAF50"/>
+        <circle cx="56" cy="83" r="3" fill="#f44336"/>
+      </svg>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+      <h1 class="error-code">404</h1>
+      <p class="message">Lost in space...</p>
+      <p class="sub-message">The page you're looking for doesn't exist or has moved.</p>
+      <a href="/" class="home-link">
+        <span class="link-icon">🚀</span>
+        Back to Earth
+      </a>
+    </div>
+
+    <!-- Floating particles -->
+    <div class="particles">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <div
+          class="particle"
+          style={`--delay: ${Math.random() * 5}s; --duration: ${8 + Math.random() * 4}s; --size: ${4 + Math.random() * 8}px; --start-x: ${Math.random() * 100}%;`}
+        />
+      ))}
+    </div>
+  </div>
+
+  <!-- About section -->
+  <section class="about-teaser">
+    <p class="about-desc">
+      Looking for something? Try browsing from the homepage or use the search.
+    </p>
+    <a href="/about" class="about-link">Learn more about this site →</a>
+  </section>
+</BaseLayout>
+
+<style>
+  .lost-in-space {
+    position: relative;
+    min-height: 55vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    padding: 3rem 1rem;
+  }
+
+  /* Starfield */
+  .stars {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: var(--color-accent);
+    border-radius: 50%;
+    left: var(--x);
+    top: var(--y);
+    animation: twinkle var(--duration) ease-in-out var(--delay) infinite;
+    opacity: 0;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.2; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.5); }
+  }
+
+  /* UFOs */
+  .ufos {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .ufo {
+    position: absolute;
+  }
+
+  .ufo-1 {
+    width: 80px;
+    top: 10%;
+    left: -100px;
+    animation: fly-right 12s linear infinite;
+  }
+
+  .ufo-2 {
+    width: 50px;
+    top: 30%;
+    right: -80px;
+    animation: fly-left 15s linear 3s infinite;
+  }
+
+  .ufo-light {
+    animation: blink 0.5s ease-in-out infinite alternate;
+  }
+
+  @keyframes fly-right {
+    0% { transform: translateX(0) translateY(0); }
+    50% { transform: translateX(calc(100vw + 150px)) translateY(-20px); }
+    50.01% { transform: translateX(calc(100vw + 150px)) translateY(50px); opacity: 0; }
+    50.02% { transform: translateX(-100px) translateY(50px); opacity: 0; }
+    50.03% { transform: translateX(-100px) translateY(0); opacity: 1; }
+    100% { transform: translateX(0) translateY(0); }
+  }
+
+  @keyframes fly-left {
+    0% { transform: translateX(0) translateY(0) scaleX(-1); }
+    50% { transform: translateX(calc(-100vw - 150px)) translateY(30px) scaleX(-1); }
+    50.01% { transform: translateX(calc(-100vw - 150px)) translateY(-30px) scaleX(-1); opacity: 0; }
+    50.02% { transform: translateX(100px) translateY(-30px) scaleX(-1); opacity: 0; }
+    50.03% { transform: translateX(100px) translateY(0) scaleX(-1); opacity: 1; }
+    100% { transform: translateX(0) translateY(0) scaleX(-1); }
+  }
+
+  @keyframes blink {
+    from { opacity: 0.4; }
+    to { opacity: 1; }
+  }
+
+  /* Monsters */
+  .monsters {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .monster {
+    position: absolute;
+  }
+
+  .monster-1 {
+    width: 60px;
+    top: 15%;
+    right: -80px;
+    animation: monster-float-1 18s ease-in-out infinite;
+  }
+
+  .monster-2 {
+    width: 45px;
+    bottom: 25%;
+    left: -60px;
+    animation: monster-float-2 20s ease-in-out 2s infinite;
+  }
+
+  .monster-3 {
+    width: 40px;
+    top: 50%;
+    right: -50px;
+    animation: monster-float-3 16s ease-in-out 5s infinite;
+  }
+
+  @keyframes monster-float-1 {
+    0%, 100% { transform: translateX(0) translateY(0) rotate(0deg); }
+    25% { transform: translateX(-30vw) translateY(20px) rotate(-10deg); }
+    50% { transform: translateX(-60vw) translateY(-10px) rotate(5deg); }
+    75% { transform: translateX(-30vw) translateY(15px) rotate(-5deg); }
+  }
+
+  @keyframes monster-float-2 {
+    0%, 100% { transform: translateX(0) translateY(0) rotate(0deg); }
+    25% { transform: translateX(25vw) translateY(-15px) rotate(8deg); }
+    50% { transform: translateX(50vw) translateY(10px) rotate(-5deg); }
+    75% { transform: translateX(25vw) translateY(-20px) rotate(3deg); }
+  }
+
+  @keyframes monster-float-3 {
+    0%, 100% { transform: translateX(0) translateY(0) rotate(0deg); }
+    30% { transform: translateX(-40vw) translateY(-30px) rotate(-8deg); }
+    60% { transform: translateX(-20vw) translateY(20px) rotate(6deg); }
+  }
+
+  /* Floating astronaut */
+  .astronaut {
+    position: relative;
+    width: 100px;
+    height: 140px;
+    margin-bottom: 1.5rem;
+    animation: float 6s ease-in-out infinite;
+    z-index: 5;
+  }
+
+  .astronaut svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 15px rgba(29, 78, 216, 0.2));
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0) rotate(-5deg);
+    }
+    50% {
+      transform: translateY(-15px) rotate(5deg);
+    }
+  }
+
+  /* Content */
+  .content {
+    position: relative;
+    z-index: 10;
+  }
+
+  .error-code {
+    font-size: clamp(4rem, 12vw, 8rem);
+    font-weight: 700;
+    line-height: 1;
+    margin: 0;
+    color: var(--color-accent);
+    animation: glow 3s ease-in-out infinite alternate;
+  }
+
+  @keyframes glow {
+    from {
+      filter: drop-shadow(0 0 8px rgba(29, 78, 216, 0.3));
+    }
+    to {
+      filter: drop-shadow(0 0 16px rgba(29, 78, 216, 0.5));
+    }
+  }
+
+  .message {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0.75rem 0 0.5rem;
+    color: var(--color-ink);
+  }
+
+  .sub-message {
+    font-size: 0.95rem;
+    color: var(--color-soft);
+    margin: 0 0 1.5rem;
+    max-width: 300px;
+  }
+
+  .home-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--color-accent);
+    color: white !important;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3);
+  }
+
+  .home-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(29, 78, 216, 0.4);
+    color: white !important;
+  }
+
+  .link-icon {
+    display: inline-block;
+    animation: rocket 2s ease-in-out infinite;
+  }
+
+  @keyframes rocket {
+    0%, 100% { transform: translateX(0) rotate(-15deg); }
+    50% { transform: translateX(3px) rotate(-15deg); }
+  }
+
+  /* Floating particles (space debris) */
+  .particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .particle {
+    position: absolute;
+    width: var(--size);
+    height: var(--size);
+    background: var(--color-accent-mid);
+    border-radius: 50%;
+    left: var(--start-x);
+    top: -20px;
+    animation: fall var(--duration) linear var(--delay) infinite;
+    opacity: 0.6;
+  }
+
+  @keyframes fall {
+    0% {
+      transform: translateY(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.6;
+    }
+    90% {
+      opacity: 0.6;
+    }
+    100% {
+      transform: translateY(calc(55vh + 40px)) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  /* About teaser section */
+  .about-teaser {
+    padding: 2.5rem 0 3rem;
+    border-top: 1px solid var(--color-border-light);
+  }
+
+  .about-header {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .about-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--color-border);
+    flex-shrink: 0;
+  }
+
+  .about-intro h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+    color: var(--color-ink);
+  }
+
+  .about-role {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin: 0 0 0.5rem;
+  }
+
+  .about-desc {
+    font-size: 0.9rem;
+    color: var(--color-soft);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .services-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .service-card {
+    display: flex;
+    gap: 0.875rem;
+    padding: 0.875rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    background: var(--color-card);
+  }
+
+  .service-icon {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    border-radius: 8px;
+  }
+
+  .service-card strong {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-ink);
+    margin-bottom: 0.2rem;
+  }
+
+  .service-card p {
+    font-size: 0.8rem;
+    color: var(--color-soft);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .about-link {
+    display: inline-block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  .about-link:hover {
+    opacity: 0.8;
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .lost-in-space {
+      min-height: 50vh;
+      padding: 2rem 1rem;
+    }
+
+    .astronaut {
+      width: 80px;
+      height: 112px;
+    }
+
+    .about-header {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .ufo-1 { width: 60px; }
+    .ufo-2 { width: 40px; }
+    .monster-1 { width: 45px; }
+    .monster-2 { width: 35px; }
+    .monster-3 { width: 30px; }
+  }
+</style>

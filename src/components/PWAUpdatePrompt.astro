@@ -1,0 +1,39 @@
+<!-- PWA update prompt: shows a toast when new content is available -->
+<div id="pwa-toast" class="fixed bottom-4 right-4 z-[100] hidden">
+  <div class="bg-ink text-white rounded-xl px-5 py-3 shadow-lg flex items-center gap-3 text-sm">
+    <span>New content available</span>
+    <button id="pwa-refresh" class="bg-white/20 hover:bg-white/30 rounded-lg px-3 py-1 font-medium transition-colors">
+      Refresh
+    </button>
+    <button id="pwa-dismiss" class="text-white/60 hover:text-white transition-colors">
+      ✕
+    </button>
+  </div>
+</div>
+
+<script>
+  // Only run in production (service worker won't be registered in dev)
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', async () => {
+      const { registerSW } = await import('virtual:pwa-register');
+
+      const updateSW = registerSW({
+        onNeedRefresh() {
+          const toast = document.getElementById('pwa-toast');
+          if (toast) toast.classList.remove('hidden');
+
+          document.getElementById('pwa-refresh')?.addEventListener('click', () => {
+            updateSW(true);
+          });
+
+          document.getElementById('pwa-dismiss')?.addEventListener('click', () => {
+            toast?.classList.add('hidden');
+          });
+        },
+        onOfflineReady() {
+          // Silently ready for offline - no toast needed
+        },
+      });
+    });
+  }
+</script>

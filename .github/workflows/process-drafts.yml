@@ -1,0 +1,125 @@
+name: Process Draft Content
+
+on:
+  push:
+    branches: [draft]
+    paths:
+      - 'src/content/posts/**.mdx'
+      - 'src/content/stream/**.mdx'
+      - 'src/content/stream-content/**.md'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  process-and-merge:
+    name: Process & Merge Draft Content
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: draft
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Process draft posts (upload external images)
+        env:
+          # Set INGEST_URL to your deployed ingest worker URL + /ingest
+          INGEST_URL: ${{ secrets.INGEST_URL }}
+          INGEST_SECRET: ${{ secrets.INGEST_SECRET }}
+          MEDIA_BASE_URL: ${{ secrets.MEDIA_BASE_URL }}
+        run: |
+          # Skip if ingest URL not configured
+          if [ -z "$INGEST_URL" ]; then
+            echo "INGEST_URL not set — skipping image processing"
+            exit 0
+          fi
+
+          CHANGED=$(git diff --name-only HEAD~1 HEAD -- 'src/content/posts/*.mdx' 2>/dev/null || echo "")
+
+          if [ -z "$CHANGED" ]; then
+            echo "No post MDX files changed"
+          else
+            for file in $CHANGED; do
+              echo "Checking $file..."
+
+              if ! grep -q '^status:.*draft' "$file" 2>/dev/null; then
+                echo "  Skipping (not status: draft)"
+                continue
+              fi
+
+              echo "  Found status: draft — processing..."
+
+              SLUG=$(basename "$file" .mdx)
+              FRONTMATTER=$(sed -n '/^---$/,/^---$/p' "$file" | sed '1d;$d')
+              BODY=$(sed -n '/^---$/,/^---$/!p' "$file" | tail -n +1)
+
+              TITLE=$(echo "$FRONTMATTER" | grep '^title:' | sed 's/^title: *//' | sed 's/^"//;s/"$//')
+              FORMAT=$(echo "$FRONTMATTER" | grep '^format:' | sed 's/^format: *//' | sed 's/^"//;s/"$//')
+              HERO=$(echo "$FRONTMATTER" | grep '^heroImage:' | sed 's/^heroImage: *//' | sed 's/^"//;s/"$//')
+
+              FORMAT=${FORMAT:-article}
+
+              # Upload external hero images to R2 via ingest worker
+              MEDIA="[]"
+              if [ -n "$HERO" ] && echo "$HERO" | grep -q '^http' && [ -n "$MEDIA_BASE_URL" ] && ! echo "$HERO" | grep -q "$MEDIA_BASE_URL"; then
+                MEDIA='[{"field":"heroImage","sourceUrl":"'"$HERO"'","filename":"hero.webp","contentType":"image/webp"}]'
+              fi
+
+              HTTP_CODE=$(curl -s -o /tmp/ingest_response.json -w "%{http_code}" -X POST "$INGEST_URL" \
+                -H "Content-Type: application/json" \
+                -H "Authorization: Bearer $INGEST_SECRET" \
+                -d "$(jq -n \
+                  --arg slug "$SLUG" \
+                  --arg format "$FORMAT" \
+                  --arg title "$TITLE" \
+                  --arg body "$BODY" \
+                  --argjson media "$MEDIA" \
+                  '{slug: $slug, format: $format, frontmatter: {title: $title, format: $format}, body: $body, media: $media}'
+                )")
+
+              RESPONSE=$(cat /tmp/ingest_response.json)
+              echo "  HTTP $HTTP_CODE — Response: $RESPONSE"
+
+              if [ "$HTTP_CODE" -ge 400 ]; then
+                echo "::error::Ingest failed for $SLUG (HTTP $HTTP_CODE)"
+              fi
+            done
+          fi
+
+      - name: Create PR to merge draft to main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          CHANGED_FILES=$(git diff --name-only origin/main HEAD -- 'src/content/' 2>/dev/null | head -5)
+
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "No content changes to merge"
+            exit 0
+          fi
+
+          SLUGS=$(echo "$CHANGED_FILES" | xargs -I{} basename {} .mdx | xargs -I{} basename {} .md | head -3 | tr '\n' ', ' | sed 's/,$//')
+
+          gh pr create \
+            --base main \
+            --head draft \
+            --title "content: add $SLUGS" \
+            --body "Auto-generated PR to merge draft content to main." \
+          || echo "PR already exists, will auto-update"
+
+      - name: Auto-merge PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER=$(gh pr list --base main --head draft --json number --jq '.[0].number' 2>/dev/null || echo "")
+
+          if [ -n "$PR_NUMBER" ]; then
+            echo "Merging PR #$PR_NUMBER..."
+            gh pr merge "$PR_NUMBER" --squash --auto --delete-branch=false || echo "Auto-merge enabled or already merged"
+          fi

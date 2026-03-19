@@ -1,0 +1,67 @@
+{
+  "site": {
+    "name": "The Feed",
+    "tagline": "Content pipeline, automated",
+    "description": "An open-source content platform powered by Astro 5, Cloudflare Pages, and a Telegram-based ingestion pipeline.",
+    "share_brand": "The Feed",
+    "share_url": "your-site.com",
+    "share_filename_prefix": "thefeed"
+  },
+  "nav": {
+    "explore": "Khám phá",
+    "match": "Tìm Pattern",
+    "submit": "Gửi bài",
+    "search": "Search"
+  },
+  "home": {
+    "hero": "Chia sẻ hành trình Tự động hóa công việc thông minh bằng AI.",
+    "subtitle": "Mình nghiên cứu và ứng dụng AI automation full-time - chia sẻ hành trình này để mang lại giá trị thật cho công việc và đời sống của bạn.",
+    "cta_explore": "Xem bài viết",
+    "cta_match": "Làm Quiz"
+  },
+  "explore": {
+    "title": "Bài viết",
+    "subtitle": "Workflow thật, process thật — kể cả failures.",
+    "filter_all": "Tất cả"
+  },
+  "results": {
+    "title": "Đây là những gì phù hợp với bạn",
+    "subtitle": "Xếp hạng theo mức độ match với profile của bạn.",
+    "strong": "Rất phù hợp",
+    "possible": "Khả thi",
+    "stretch": "Thử thách",
+    "why_fits": "Tại sao phù hợp:",
+    "share_prompt": "Biết ai đang tìm hiểu AI business?",
+    "share": "Chia sẻ quiz này",
+    "retake": "Làm lại quiz"
+  },
+  "case": {
+    "tonys_take": "Editor's Take",
+    "what_works": "Điều Thực Sự Hiệu Quả",
+    "what_different": "Nếu Làm Lại Tôi Sẽ",
+    "pattern": "Pattern",
+    "revenue": "Doanh thu",
+    "verified": "Xác minh",
+    "market": "Thị trường",
+    "year": "Năm"
+  },
+  "verification": {
+    "unverified": "Chưa xác minh",
+    "partial": "Xác minh một phần",
+    "verified": "Đã xác minh",
+    "tonys-pick": "Editor's Pick"
+  },
+  "stage": {
+    "idea": "Ý tưởng",
+    "building": "Đang xây",
+    "launched": "Đã launch",
+    "profitable": "Có lợi nhuận",
+    "active": "Đang dùng"
+  },
+  "caseType": {
+    "business": "Business",
+    "use-case": "Use Case",
+    "workflow": "Workflow",
+    "lifestyle": "Lifestyle"
+  }
+}

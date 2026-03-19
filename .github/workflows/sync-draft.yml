@@ -1,0 +1,38 @@
+name: Sync Draft to Main
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fast-forward draft to include main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin draft main
+
+          # Check if draft has commits ahead of main (unmerged content from ingest)
+          AHEAD=$(git rev-list --count origin/main..origin/draft)
+
+          if [ "$AHEAD" -gt 0 ]; then
+            echo "Draft has $AHEAD unmerged commit(s) — rebasing onto main to preserve them"
+            git checkout origin/draft
+            git rebase origin/main
+            git push origin HEAD:draft --force-with-lease
+          else
+            echo "Draft is even or behind main — resetting to main"
+            git checkout origin/main
+            git push origin HEAD:draft --force
+          fi
