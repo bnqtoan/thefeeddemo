@@ -90,6 +90,17 @@ const jokes = defineCollection({
 });
 
 
+const builders = defineCollection({
+    loader: glob({ pattern: '**/*.json', base: './src/content/builders' }),
+    schema: z.object({
+        name: z.string(),
+        location: z.string().optional(),
+        bio: z.string().optional(),
+        avatar: z.string().optional(),
+        url: z.string().optional(),
+    }),
+});
+
 const streamContent = defineCollection({
     loader: glob({ pattern: '**/*.md', base: './src/content/stream-content' }),
     schema: z.object({
@@ -100,4 +111,4 @@ const streamContent = defineCollection({
 });
 
 
-export const collections = { posts, tools, stream, jokes, streamContent };
+export const collections = { posts, tools, stream, jokes, builders, streamContent };

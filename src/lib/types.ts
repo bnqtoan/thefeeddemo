@@ -122,6 +122,19 @@ export interface Tool {
 
 
 // ==============================
+// Builders — Author/creator profiles
+// ==============================
+
+export interface Builder {
+  slug: string;
+  name: string;
+  location?: string;
+  bio?: string;
+  avatar?: string;
+  url?: string;
+}
+
+// ==============================
 // Jokes — Dad jokes with optional images
 // ==============================
 

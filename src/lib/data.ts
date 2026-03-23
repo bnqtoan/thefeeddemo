@@ -1,6 +1,6 @@
 import { getCollection } from 'astro:content';
 import { marked } from 'marked';
-import type { Post, ArticlePost, ShortVideoPost, VideoEmbedPost, AudioPost, AudioPlaylistPost, QuotePost, GalleryPost, Tool, StreamItem, Joke } from './types';
+import type { Post, ArticlePost, ShortVideoPost, VideoEmbedPost, AudioPost, AudioPlaylistPost, QuotePost, GalleryPost, Tool, StreamItem, Joke, Builder } from './types';
 
 // ==============================
 // Posts — from Content Collections
@@ -227,6 +227,20 @@ export async function getStreamPaginated(page: number = 1, perPage: number = 10,
 export async function getStreamItem(slug: string): Promise<StreamItem | undefined> {
   const all = await getStream();
   return all.find(i => i.slug === slug);
+}
+
+// ==============================
+// Builders — Author/creator profiles
+// ==============================
+
+export async function getBuilders(): Promise<Builder[]> {
+  const entries = await getCollection('builders');
+  return entries.map(e => ({ slug: e.id.replace(/\.json$/, ''), ...e.data }));
+}
+
+export async function getBuilder(slug: string): Promise<Builder | undefined> {
+  const builders = await getBuilders();
+  return builders.find(b => b.slug === slug);
 }
 
 // ==============================
